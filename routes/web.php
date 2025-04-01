@@ -20,8 +20,10 @@ Route::get('/test-auth', function (Request $request) {
 })->middleware('auth:sanctum');
 
 ##################################### 
-# User
-Route::post('/userRegister', [UserController::class, 'userRegister']);
+# Customer
+Route::post('/customerRegister', [UserController::class, 'customerRegister']);
 
+# Seller
+Route::post('/sellerRegister', [UserController::class, 'sellerRegister']);
 
 #######################################
