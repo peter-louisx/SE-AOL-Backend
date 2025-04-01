@@ -12,20 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->string('product_id', 7)->primary();
+            $table->id();
             $table->string('name', 50);
             $table->integer('price');
             $table->integer('sold');
             $table->integer('stock');
             $table->text('description');
             $table->decimal('weight', 8, 2);
-            $table->string('tag_id', 7);
-            $table->string('category_id', 7);
-            $table->string('brand_id', 7);
+            $table->unsignedBigInteger('tag_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('brand_id');
             $table->timestamps();
         
-            $table->foreign('tag_id')->references('tag_id')->on('product_tags')->onDelete('cascade');
-            $table->foreign('category_id')->references('category_id')->on('categories')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('product_tags')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
         });
         
     }

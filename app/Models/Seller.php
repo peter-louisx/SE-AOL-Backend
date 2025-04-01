@@ -9,16 +9,12 @@ class Seller extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'seller_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
-        'seller_id',
+        'user_id',
         'address',
         'balance',
         'brand_id',
-        'user_id',
     ];
 
     public function user()
@@ -28,6 +24,6 @@ class Seller extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'brand_id');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 }

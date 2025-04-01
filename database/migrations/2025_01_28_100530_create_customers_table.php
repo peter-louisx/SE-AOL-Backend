@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->string('customer_id', 7)->primary();
-            $table->unsignedBigInteger('user_id')->unique(); 
+            $table->id();
+            $table->unsignedBigInteger('user_id'); 
             $table->integer('green_point');
             $table->text('voucher')->nullable();
             $table->timestamps();

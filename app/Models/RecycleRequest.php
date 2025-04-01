@@ -9,10 +9,6 @@ class RecycleRequest extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'request_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
     protected $fillable = [
         'vendor_id',
         'customer_id',
@@ -24,16 +20,16 @@ class RecycleRequest extends Model
 
     public function vendor()
     {
-        return $this->belongsTo(Vendor::class, 'vendor_id', 'vendor_id');
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
     }
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
     public function message()
     {
-        return $this->belongsTo(Message::class, 'message_id', 'message_id');
+        return $this->belongsTo(Message::class, 'message_id', 'id');
     }
 }

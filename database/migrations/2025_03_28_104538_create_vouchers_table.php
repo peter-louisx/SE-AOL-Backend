@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_id', 7);
+            $table->unsignedBigInteger('customer_id');
             $table->text('title');
             $table->text('terms');
             $table->date('valid_until');
             $table->timestamps();
 
-            $table->foreign('customer_id')->references('customer_id')->on('customers')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 

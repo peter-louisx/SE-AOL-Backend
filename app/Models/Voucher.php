@@ -18,6 +18,6 @@ class Voucher extends Model
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 }

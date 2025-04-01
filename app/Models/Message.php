@@ -9,10 +9,6 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'message_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
     protected $fillable = [
         'to_number',
         'from_number',

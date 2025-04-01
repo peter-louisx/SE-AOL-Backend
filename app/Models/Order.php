@@ -9,12 +9,8 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'order_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
-        'order_id',
         'customer_id',
         'product_id',
         'order_status',
@@ -26,11 +22,11 @@ class Order extends Model
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

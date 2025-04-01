@@ -9,12 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'customer_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
     protected $fillable = [
-        'customer_id',
         'user_id',
         'green_point',
         'voucher',
@@ -27,16 +22,16 @@ class Customer extends Model
 
     public function address()
     {
-        return $this->hasMany(CustomerAddress::class, 'customer_id', 'customer_id');
+        return $this->hasMany(CustomerAddress::class, 'customer_id', 'id');
     }
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'customer_id', 'customer_id');
+        return $this->hasMany(Order::class, 'customer_id', 'id');
     }
 
     public function carts()
     {
-        return $this->hasMany(Cart::class, 'customer_id', 'customer_id');
+        return $this->hasMany(Cart::class, 'customer_id', 'id');
     }
 }

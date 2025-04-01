@@ -9,12 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'product_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
     protected $fillable = [
-        'product_id',
         'name',
         'price',
         'sold',
@@ -28,7 +23,7 @@ class Product extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'brand_id');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
     public function category()
