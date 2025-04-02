@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:20',
-            'phone_number' => 'required|string|max:15',
+            'phone_number' => 'required|regex:/^[0-9]+$/|max:15',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'profile' => 'nullable|url',
@@ -44,7 +44,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:20',
             'store_name' => 'required|string|max:30',
-            'phone_number' => 'required|string|max:15',
+            'phone_number' => 'required|regex:/^[0-9]+$/|max:15',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'profile' => 'nullable|url',
@@ -76,9 +76,13 @@ class UserController extends Controller
         ]);
     }
 
-    # Vendor
-    public function vendorRegister()
-    {
-        return response()->json(['message' => 'Hello from UserController']);
+    public function addCustomerAddress(Request $request){
+        $customer = Auth::user();
+
+        $customer->address()->create([
+            'address' => $request->address,
+        ]);
+        
+        return response()->json(['message' => "alamat telah ditambahkan"]);
     }
 }

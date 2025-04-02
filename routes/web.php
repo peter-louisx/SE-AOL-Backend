@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,10 +21,18 @@ Route::get('/test-auth', function (Request $request) {
 })->middleware('auth:sanctum');
 
 ##################################### 
+# User
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/user', [AuthController::class, 'user']);
+
 # Customer
 Route::post('/customerRegister', [UserController::class, 'customerRegister']);
 
 # Seller
 Route::post('/sellerRegister', [UserController::class, 'sellerRegister']);
+
+# Vendor
+Route::post('/vendorRegister', [UserController::class, 'vendorRegister']);
 
 #######################################
