@@ -15,6 +15,7 @@ class Seller extends Model
         'address',
         'balance',
         'brand_id',
+        'bank_account',
     ];
 
     public function user()

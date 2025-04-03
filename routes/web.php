@@ -4,7 +4,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SellerController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
@@ -31,17 +32,15 @@ Route::get('/test-auth', function (Request $request) {
 # User
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/user', [AuthController::class, 'user']);
+Route::get('/user', [AuthController::class, 'user']); # get user info
 
 # Customer
-Route::post('/customerRegister', [UserController::class, 'customerRegister']);
+Route::post('/customerRegister', [CustomerController::class, 'customerRegister']);
+Route::post('/addCustomerAddress', [CustomerController::class, 'addCustomerAddress']);
 
 # Seller
-Route::post('/sellerRegister', [UserController::class, 'sellerRegister']);
-
-# Vendor
-Route::post('/vendorRegister', [UserController::class, 'vendorRegister']);
-
+Route::post('/sellerRegister', [SellerController::class, 'sellerRegister']);
+Route::post('/addBankAccount', [SellerController::class, 'addBankAccount']);
 #######################################
 
 

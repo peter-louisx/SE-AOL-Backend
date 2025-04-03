@@ -32,8 +32,10 @@ class AuthController extends Controller
                 'expires_at' => now()->addDays(7),
             ]);
         
-            return response()->json(['message' => 'Login successful'])
-                ->cookie('auth_token', $token, 60 * 24 * 7, '/', null, true, true);
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,  // Mengirimkan token yang digunakan
+            ])->cookie('auth_token', $token, 60 * 24 * 7, '/', null, true, true);
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
