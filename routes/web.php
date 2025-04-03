@@ -11,6 +11,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductTagController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,8 +29,18 @@ Route::get('/test-auth', function (Request $request) {
 
 ##################################### 
 # User
-Route::post('/userRegister', [UserController::class, 'userRegister']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/user', [AuthController::class, 'user']);
 
+# Customer
+Route::post('/customerRegister', [UserController::class, 'customerRegister']);
+
+# Seller
+Route::post('/sellerRegister', [UserController::class, 'sellerRegister']);
+
+# Vendor
+Route::post('/vendorRegister', [UserController::class, 'vendorRegister']);
 
 #######################################
 
