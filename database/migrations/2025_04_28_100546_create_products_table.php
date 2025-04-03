@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('sold');
             $table->integer('stock');
             $table->text('description');
-            $table->decimal('weight', 8, 2);
+            $table->decimal('rating', 4, 2);
             $table->unsignedBigInteger('tag_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');

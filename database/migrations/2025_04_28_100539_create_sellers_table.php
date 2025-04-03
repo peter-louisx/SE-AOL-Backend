@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('address');
             $table->integer('balance');
+            $table->string('bank_account', 20);
             $table->unsignedBigInteger('user_id'); 
             $table->unsignedBigInteger('brand_id'); 
             $table->timestamps();

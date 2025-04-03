@@ -12,7 +12,8 @@ class Vendor extends Model {
     protected $fillable = [
         'name', 
         'address', 
-        'phone_number'];
+        'phone_number'
+    ];
 
     public function recycleRequests() {
         return $this->hasMany(RecycleRequest::class, 'vendor_id');
