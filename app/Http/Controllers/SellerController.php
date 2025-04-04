@@ -46,23 +46,81 @@ class SellerController extends Controller
         ]);
     }
 
-    public function addBankAccount(Request $request)
+    public function editSellerProfile(Request $request)
     {
-        $seller = Auth::user();
+        $user = Auth::user();
 
-        if (!$seller) {
+        if (!$user || !$user->seller) {
             return response()->json(['error' => 'Pengguna belum login'], 401);
         }
 
         $request->validate([
+            'store_name' => 'required|string|max:30',
+            'phone_number' => 'required|regex:/^[0-9]+$/|max:15',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'address' => 'required|string',       
             'bank_account' => 'required|regex:/^[0-9]+$/|max:20',
         ]);
 
-        $seller->seller->update($request->only(['bank_account']));
+        $user->update([
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+        ]);
+
+        $user->seller->update([
+            'address' => $request->address,
+            'bank_account' => $request->bank_account,
+        ]);
+
+        $user->seller->brand->update($request->only(['store_name']));
 
         return response()->json([
-            'message' => 'Bank account updated!',
-            'Account' => $seller,
+            'message' => 'Seller Profile Updated',
+            'Account' => $user,
+        ]);
+    }
+
+    // public function sellerPictureProfile(Request $request)
+    // {
+    //     $request->validate([
+    //         'profile' => 'required|url',
+    //     ]);
+
+    //     $user = Auth::user();
+
+    //     if (!$user || !$user->seller) {
+    //         return response()->json(['error' => 'Pengguna belum login'], 401);
+    //     }
+
+    //     $user->update($request->only(['profile']));
+
+    //     return response()->json([
+    //         'message' => 'Profile updated',
+    //         'profile url' => $user,
+    //     ]);
+    // }
+
+    public function sellerPictureProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->seller) {
+            return response()->json(['error' => 'Pengguna belum login'], 401);
+        }
+
+        $request->validate([
+            'profile' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+
+        $file = $request->file('profile');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('public/profile_pictures', $fileName);
+
+        $user->update(['profile' => str_replace('public/', '', $path)]);
+
+        return response()->json([
+            'message' => 'Profile updated',
+            'profile_url' => asset('storage/' . $user->profile),
         ]);
     }
 }

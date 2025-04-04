@@ -14,19 +14,21 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\AuthController;
 
-#User Register dan log in
-# User
+// User
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/user', [AuthController::class, 'user']); # get user info
 
-# Customer
+// Customer
 Route::post('/customer-register', [CustomerController::class, 'customerRegister']);
 Route::post('/add-customer-address', [CustomerController::class, 'addCustomerAddress'])->middleware('auth:sanctum');
+Route::post('/edit-customer-profile', [CustomerController::class, 'editCustomerProfile'])->middleware('auth:sanctum');
+Route::post('/customer-profile-picture', [CustomerController::class, 'customerProfilePicture'])->middleware('auth:sanctum');
 
-# Seller
+// Seller
 Route::post('/seller-register', [SellerController::class, 'sellerRegister']);
-Route::post('/add-bank-account', [SellerController::class, 'addBankAccount'])->middleware('auth:sanctum');
+Route::post('/edit-seller-profile', [SellerController::class, 'editSellerProfile'])->middleware('auth:sanctum');
+Route::post('/seller-profile-picture', [SellerController::class, 'sellerPictureProfile'])->middleware('auth:sanctum');
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();

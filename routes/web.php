@@ -28,21 +28,21 @@ Route::get('/test-auth', function (Request $request) {
     return response()->json(['message' => 'Hello World!']);
 })->middleware('auth:sanctum');
 
-##################################### 
-# User
+// User
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/user', [AuthController::class, 'user']); # get user info
 
-# Customer
+// Customer
 Route::post('/customerRegister', [CustomerController::class, 'customerRegister']);
-Route::post('/addCustomerAddress', [CustomerController::class, 'addCustomerAddress']);
+Route::post('/add-customer-address', [CustomerController::class, 'addCustomerAddress'])->middleware('auth:sanctum');
+Route::post('/edit-customer-profile', [CustomerController::class, 'editCustomerProfile'])->middleware('auth:sanctum');
+Route::post('/customer-profile-picture', [CustomerController::class, 'customerProfilePicture'])->middleware('auth:sanctum');
 
-# Seller
+// Seller
 Route::post('/sellerRegister', [SellerController::class, 'sellerRegister']);
-Route::post('/addBankAccount', [SellerController::class, 'addBankAccount']);
-#######################################
-
+Route::post('/edit-seller-profile', [SellerController::class, 'editSellerProfile'])->middleware('auth:sanctum');
+Route::post('/seller-profile-picture', [SellerController::class, 'sellerPictureProfile'])->middleware('auth:sanctum');
 
 // product_tags 
 Route::get('/product-tags', [ProductTagController::class, 'index']);
