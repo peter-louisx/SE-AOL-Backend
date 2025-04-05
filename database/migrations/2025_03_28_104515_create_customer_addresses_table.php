@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('customer_addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
+            $table->string('label', 10);
             $table->text('address');
             $table->timestamps();
 

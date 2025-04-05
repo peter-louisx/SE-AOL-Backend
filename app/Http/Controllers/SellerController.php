@@ -75,30 +75,10 @@ class SellerController extends Controller
         $user->seller->brand->update($request->only(['store_name']));
 
         return response()->json([
-            'message' => 'Seller Profile Updated',
+            'message' => 'Seller Profile udah ke Updated',
             'Account' => $user,
         ]);
     }
-
-    // public function sellerPictureProfile(Request $request)
-    // {
-    //     $request->validate([
-    //         'profile' => 'required|url',
-    //     ]);
-
-    //     $user = Auth::user();
-
-    //     if (!$user || !$user->seller) {
-    //         return response()->json(['error' => 'Pengguna belum login'], 401);
-    //     }
-
-    //     $user->update($request->only(['profile']));
-
-    //     return response()->json([
-    //         'message' => 'Profile updated',
-    //         'profile url' => $user,
-    //     ]);
-    // }
 
     public function sellerPictureProfile(Request $request)
     {
@@ -119,7 +99,7 @@ class SellerController extends Controller
         $user->update(['profile' => str_replace('public/', '', $path)]);
 
         return response()->json([
-            'message' => 'Profile updated',
+            'message' => 'Profile picture udah updated',
             'profile_url' => asset('storage/' . $user->profile),
         ]);
     }

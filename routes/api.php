@@ -21,7 +21,10 @@ Route::get('/user', [AuthController::class, 'user']); # get user info
 
 // Customer
 Route::post('/customer-register', [CustomerController::class, 'customerRegister']);
+Route::post('/show-customer-address', [CustomerController::class, 'getCustomerAddresses'])->middleware('auth:sanctum');
 Route::post('/add-customer-address', [CustomerController::class, 'addCustomerAddress'])->middleware('auth:sanctum');
+Route::post('/edit-customer-address/{id}', [CustomerController::class, 'editCustomerAddress'])->middleware('auth:sanctum');
+Route::post('/delete-customer-address/{id}', [CustomerController::class, 'deleteCustomerAddress'])->middleware('auth:sanctum');
 Route::post('/edit-customer-profile', [CustomerController::class, 'editCustomerProfile'])->middleware('auth:sanctum');
 Route::post('/customer-profile-picture', [CustomerController::class, 'customerProfilePicture'])->middleware('auth:sanctum');
 
