@@ -17,53 +17,39 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-        
-            if (!$user) {
-                return response()->json(['message' => 'User not authenticated'], 401);
-            }
-        
-            $token = Str::random(64);
-            $user->tokens()->create([
-                'name' => 'auth_token',
-                'token' => hash('sha256', $token),
-                'abilities' => ['*'],
-                'expires_at' => now()->addDays(7),
-            ]);
-        
-            return response()->json([
-                'message' => 'Login successful',
-                'token' => $token,  // Mengirimkan token yang digunakan
-            ])->cookie('auth_token', $token, 60 * 24 * 7, '/', null, true, true);
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !password_verify($request->password, $user->password)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return response()->json(['message' => 'Invalid credentials'], 401);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'token' => $token,
+        ]);
     }
 
     public function logout(Request $request)
-    {
-        $token = $request->cookie('auth_token');
+    {   
+        $request->user()->currentAccessToken()->delete();
 
-        if ($token) {
-            PersonalAccessToken::where('token', hash('sha256', $token))->delete();
-
-            return response()->json(['message' => 'Logout successful'])
-                ->cookie('auth_token', '', -1);
-        }
-
-        return response()->json(['message' => 'No active session'], 400);
+        return response()->json([
+            'massage' => 'logout successfull',
+        ]);
     }
 
     public function user(Request $request)
     {
-        $token = $request->cookie('auth_token');
+        $user = $request->user();
 
-        if ($token) {
-            $accessToken = PersonalAccessToken::where('token', hash('sha256', $token))->first();
-            if ($accessToken && !now()->greaterThan($accessToken->expires_at)) {
-                return response()->json(['user' => User::find($accessToken->tokenable_id)]);
-            }
+        if ($user) {
+            $user->load('customer');
+
+            return response()->json([
+                'full_name' => $user->name,
+                'green_point' => $user->customer ? $user->customer->green_point : 0,
+            ]);
         }
 
         return response()->json(['message' => 'Unauthorized'], 401);

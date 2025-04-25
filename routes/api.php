@@ -15,9 +15,9 @@ use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\AuthController;
 
 // User
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/user', [AuthController::class, 'user']); # get user info
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
 
 // Customer
 Route::post('/customer-register', [CustomerController::class, 'customerRegister']);

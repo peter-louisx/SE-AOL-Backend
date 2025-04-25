@@ -37,13 +37,14 @@ Route::get('/test-auth', function (Request $request) {
 // User
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/user', [AuthController::class, 'user']); # get user info
+Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
 
 // Customer
 Route::post('/customerRegister', [CustomerController::class, 'customerRegister']);
 Route::post('/add-customer-address', [CustomerController::class, 'addCustomerAddress'])->middleware('auth:sanctum');
 Route::post('/edit-customer-profile', [CustomerController::class, 'editCustomerProfile'])->middleware('auth:sanctum');
 Route::post('/customer-profile-picture', [CustomerController::class, 'customerProfilePicture'])->middleware('auth:sanctum');
+Route::post('/get-customer-profile', [CustomerController::class, 'getCustomerProfile'])->middleware('auth:sanctum');
 
 // Seller
 Route::post('/sellerRegister', [SellerController::class, 'sellerRegister']);
