@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('bank_account', 20)->nullable();
             $table->unsignedBigInteger('user_id'); 
             $table->unsignedBigInteger('brand_id'); 
+            $table->string('bank_name')->nullable();
             $table->timestamps();
         
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

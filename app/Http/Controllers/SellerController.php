@@ -55,52 +55,49 @@ class SellerController extends Controller
         }
 
         $request->validate([
-            'store_name' => 'required|string|max:30',
-            'phone_number' => 'required|regex:/^[0-9]+$/|max:15',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'address' => 'required|string',       
-            'bank_account' => 'required|regex:/^[0-9]+$/|max:20',
+            'store_name'     => 'required|string|max:30',
+            'phone_number'   => 'required|regex:/^[0-9]+$/|max:15',
+            'email'          => 'required|email|unique:users,email,' . $user->id,
+            'address'        => 'required|string',
+            'bank_account'   => 'required|regex:/^[0-9]+$/|max:20',
+            'profile'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'bank_name'      => 'nullable|string|max:50',
         ]);
 
         $user->update([
             'phone_number' => $request->phone_number,
-            'email' => $request->email,
+            'email'        => $request->email,
         ]);
 
         $user->seller->update([
-            'address' => $request->address,
+            'address'      => $request->address,
             'bank_account' => $request->bank_account,
+            'bank_name'    => $request->bank_name,
         ]);
 
-        $user->seller->brand->update($request->only(['store_name']));
-
-        return response()->json([
-            'message' => 'Seller Profile udah ke Updated',
-            'Account' => $user,
+        $user->seller->brand->update([
+            'store_name' => $request->store_name,
         ]);
-    }
 
-    public function sellerPictureProfile(Request $request)
-    {
-        $user = Auth::user();
+        if ($request->hasFile('profile')) {
+            $file = $request->file('profile');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public/profile_pictures', $fileName);
 
-        if (!$user || !$user->seller) {
-            return response()->json(['error' => 'Pengguna belum login'], 401);
+            $user->update(['profile' => str_replace('public/', '', $path)]);
         }
 
-        $request->validate([
-            'profile' => 'required|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
-
-        $file = $request->file('profile');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $path = $file->storeAs('public/profile_pictures', $fileName);
-
-        $user->update(['profile' => str_replace('public/', '', $path)]);
-
         return response()->json([
-            'message' => 'Profile picture udah updated',
-            'profile_url' => asset('storage/' . $user->profile),
+            'message'      => 'Seller Profile berhasil diupdate',
+            'account'      => [
+                'name'         => $user->seller->brand->store_name ?? '',
+                'email'        => $user->email,
+                'phone'        => $user->phone_number,
+                'address'      => $user->seller->address ?? '',
+                'bank_account' => $user->seller->bank_account ?? '',
+                'bank_name'    => $user->seller->bank_name ?? '',
+                'image'        => $user->profile ? asset('storage/' . $user->profile) : null,
+            ],
         ]);
     }
 }
