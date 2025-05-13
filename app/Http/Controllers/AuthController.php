@@ -43,15 +43,29 @@ class AuthController extends Controller
     {
         $user = $request->user();
 
-        if ($user) {
-            $user->load('customer');
-
-            return response()->json([
-                'full_name' => $user->name,
-                'green_point' => $user->customer ? $user->customer->green_point : 0,
-            ]);
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        return response()->json(['message' => 'Unauthorized'], 401);
+        $user->load(['customer', 'seller']);
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'phone_number' => $user->phone_number,
+            'email' => $user->email,
+            'profile' => $user->profile,
+
+            'customer' => $user->customer ? [
+                'green_point' => $user->customer->green_point,
+            ] : null,
+
+            'seller' => $user->seller ? [
+                'balance' => $user->seller->balance,
+                'bank_account' => $user->seller->bank_account,
+                'address' => $user->seller->address ?? null,
+                'bank_name' => $user->seller->bank_name,
+            ] : null,
+        ]);
     }
 }

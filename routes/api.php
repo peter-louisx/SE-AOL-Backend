@@ -33,7 +33,6 @@ Route::post('/customer-profile-picture', [CustomerController::class, 'customerPr
 // Seller
 Route::post('/seller-register', [SellerController::class, 'sellerRegister']);
 Route::post('/edit-seller-profile', [SellerController::class, 'editSellerProfile'])->middleware('auth:sanctum');
-Route::post('/seller-profile-picture', [SellerController::class, 'sellerPictureProfile'])->middleware('auth:sanctum');
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
