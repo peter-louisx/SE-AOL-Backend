@@ -88,7 +88,7 @@ class SellerController extends Controller
         }
 
         return response()->json([
-            'message'      => 'Seller Profile berhasil diupdate',
+            'message'      => 'Seller Profile Updated!',
             'account'      => [
                 'name'         => $user->seller->brand->store_name ?? '',
                 'email'        => $user->email,
