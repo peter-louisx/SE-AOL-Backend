@@ -145,3 +145,10 @@ Route::get('/blogs/{id}', [BlogController::class, 'show']);
 Route::post('/store-blog', [BlogController::class, 'store']);
 Route::put('/update-blog/{id}', [BlogController::class, 'update']);
 Route::delete('/delete-blog/{id}', [BlogController::class, 'destroy']);
+
+
+Route::get('/get-csrf-token', function () {
+    return response()->json([
+        'csrf_token' => csrf_token()
+    ]);
+});

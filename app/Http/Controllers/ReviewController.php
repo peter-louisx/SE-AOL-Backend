@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -24,10 +25,15 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'product_id' => 'required|string|max:75|exists:products,id',
+            'product_id' => 'required|exists:products,id',
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string'
+            'comment' => 'nullable|string',
         ]);
+
+        $product = Product::find($validated['product_id']);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
 
         $review = Review::create($validated);
         return response()->json($review, 201);
