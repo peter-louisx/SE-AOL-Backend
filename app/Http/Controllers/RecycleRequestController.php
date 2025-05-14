@@ -51,8 +51,8 @@ class RecycleRequestController extends Controller
         $request->validate([
             'vendor_id' => 'required|exists:vendors,id',
             'message_id' => 'required|exists:messages,id',
-            'req_status' => 'required|string',
-            'delivery_type' => 'required|string',
+            'req_status' => 'required|string', // X cancelled, P penidng, C comleted
+            'delivery_type' => 'required|string', // D , delivery, P, pickup
             'total_pay' => 'required|integer',
         ]);
 
