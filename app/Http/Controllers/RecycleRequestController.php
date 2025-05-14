@@ -10,13 +10,28 @@ class RecycleRequestController extends Controller
 {
     public function index()
     {
-        $requests = RecycleRequest::with(['vendor', 'customer', 'message'])->get();
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'Pengguna belum login atau bukan customer'], 401);
+        }
+
+        $requests = RecycleRequest::where('customer_id', $user->customer->id)->get();
+
         return response()->json($requests);
     }
 
     public function show($id)
     {
-        $request = RecycleRequest::with(['vendor', 'customer', 'message'])->find($id);
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'Pengguna belum login atau bukan customer'], 401);
+        }
+
+        $request = RecycleRequest::where('id', $id)
+            ->where('customer_id', $user->customer->id)
+            ->first();
 
         if (!$request) {
             return response()->json(['message' => 'Recycle request not found'], 404);
@@ -27,17 +42,23 @@ class RecycleRequestController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'Pengguna belum login atau bukan customer'], 401);
+        }
+
         $request->validate([
             'vendor_id' => 'required|exists:vendors,id',
             'message_id' => 'required|exists:messages,id',
-            'req_status' => 'required|in:P,C,X', // P: pending, C: completed, X:canceled
-            'delivery_type' => 'required|in:D,P', // D: delivery, P:pickup
-            'total_pay' => 'required|integer|min:0',
+            'req_status' => 'required|string',
+            'delivery_type' => 'required|string',
+            'total_pay' => 'required|integer',
         ]);
 
         $recycleRequest = RecycleRequest::create([
+            'customer_id' => $user->customer->id,
             'vendor_id' => $request->vendor_id,
-            'customer_id' => Auth::user()->id,
             'message_id' => $request->message_id,
             'req_status' => $request->req_status,
             'delivery_type' => $request->delivery_type,
@@ -52,7 +73,15 @@ class RecycleRequestController extends Controller
 
     public function update(Request $request, $id)
     {
-        $recycleRequest = RecycleRequest::find($id);
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'Pengguna belum login atau bukan customer'], 401);
+        }
+
+        $recycleRequest = RecycleRequest::where('id', $id)
+            ->where('customer_id', $user->customer->id)
+            ->first();
 
         if (!$recycleRequest) {
             return response()->json(['message' => 'Recycle request not found'], 404);
@@ -61,18 +90,12 @@ class RecycleRequestController extends Controller
         $request->validate([
             'vendor_id' => 'sometimes|exists:vendors,id',
             'message_id' => 'sometimes|exists:messages,id',
-            'req_status' => 'sometimes|in:P,C,X',
-            'delivery_type' => 'sometimes|in:D,P',
-            'total_pay' => 'sometimes|integer|min:0',
+            'req_status' => 'sometimes|string',
+            'delivery_type' => 'sometimes|string',
+            'total_pay' => 'sometimes|integer',
         ]);
 
-        $recycleRequest->update($request->only([
-            'vendor_id',
-            'message_id',
-            'req_status',
-            'delivery_type',
-            'total_pay'
-        ]));
+        $recycleRequest->update($request->only(['vendor_id', 'message_id', 'req_status', 'delivery_type', 'total_pay']));
 
         return response()->json([
             'message' => 'Recycle request updated successfully!',
@@ -82,7 +105,15 @@ class RecycleRequestController extends Controller
 
     public function destroy($id)
     {
-        $recycleRequest = RecycleRequest::find($id);
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'Pengguna belum login atau bukan customer'], 401);
+        }
+
+        $recycleRequest = RecycleRequest::where('id', $id)
+            ->where('customer_id', $user->customer->id)
+            ->first();
 
         if (!$recycleRequest) {
             return response()->json(['message' => 'Recycle request not found'], 404);

@@ -14,13 +14,15 @@ class CustomerController extends Controller
 {
     public function customerRegister(Request $request)
     {
+        info('Hi2323');
+        info($request->all());
         $request->validate([
             'name' => 'required|string|max:20',
             'phone_number' => 'required|regex:/^[0-9]+$/|max:15',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed', //send another variable "password_confirmation" being exact as pw
         ]);
-
+        info($request->all());
         $user = User::create([
             'name' => $request->name,
             'phone_number' => $request->phone_number,
@@ -37,7 +39,7 @@ class CustomerController extends Controller
         return response()->json([
             'massage' => 'Masuk nih ke customer',
             'user' => $user,
-        ]);
+        ], 201);
     }
 
     public function addCustomerAddress(Request $request)

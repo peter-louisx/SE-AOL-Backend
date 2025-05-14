@@ -12,9 +12,12 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ProductTagController;
+use App\Http\Controllers\RecycleRequestController;
 
 // User
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -90,18 +93,20 @@ Route::delete('/delete-product/{id}', [ProductController::class, 'destroy']);
 
 
 //voucher
-Route::get('/vouchers', [VoucherController::class, 'index']);
-Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
-Route::post('/store-voucher', [VoucherController::class, 'store']);
-Route::put('/update-voucher/{id}', [VoucherController::class, 'update']);
-Route::delete('/delete-voucher/{id}', [VoucherController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/vouchers', [VoucherController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/vouchers/{id}', [VoucherController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/store-voucher', [VoucherController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/update-voucher/{id}', [VoucherController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/delete-voucher/{id}', [VoucherController::class, 'destroy']);
+
 
 //challenge
-Route::get('/challenges', [ChallengeController::class, 'index']);
-Route::get('/challenges/{id}', [ChallengeController::class, 'show']);
-Route::post('/store-challenge', [ChallengeController::class, 'store']);
-Route::put('/update-challenge/{id}', [ChallengeController::class, 'update']);
-Route::delete('/delete-challenge/{id}', [ChallengeController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/challenges', [ChallengeController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/challenges/{id}', [ChallengeController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/store-challenge', [ChallengeController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/update-challenge/{id}', [ChallengeController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/delete-challenge/{id}', [ChallengeController::class, 'destroy']);
+
 
 //vendor
 Route::get('/vendors', [VendorController::class, 'index']);
@@ -118,11 +123,13 @@ Route::put('/update-message/{id}', [MessageController::class, 'update']);
 Route::delete('/delete-message/{id}', [MessageController::class, 'destroy']);
 
 //recycle_request
-Route::get('/recycle-requests', [RecycleRequestController::class, 'index']);
-Route::get('/recycle-requests/{id}', [RecycleRequestController::class, 'show']);
-Route::post('/store-recycle-request', [RecycleRequestController::class, 'store']);
-Route::put('/update-recycle-request/{id}', [RecycleRequestController::class, 'update']);
-Route::delete('/delete-recycle-request/{id}', [RecycleRequestController::class, 'destroy']);
+//recycle request
+Route::middleware('auth:sanctum')->get('/recycle-requests', [RecycleRequestController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/recycle-requests/{id}', [RecycleRequestController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/store-recycle-request', [RecycleRequestController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/update-recycle-request/{id}', [RecycleRequestController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/delete-recycle-request/{id}', [RecycleRequestController::class, 'destroy']);
+
 
 
 //blog
