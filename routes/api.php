@@ -70,19 +70,21 @@ Route::post('/store-reviews', [ReviewController::class, 'store']);
 Route::put('/update-reviews/{id}', [ReviewController::class, 'update']);
 Route::delete('/delete-reviews/{id}', [ReviewController::class, 'destroy']);
 
-//orders
-Route::get('/orders', [OrderController::class, 'index']);
-Route::get('/orders/{id}', [OrderController::class, 'show']);
-Route::post('/store-order', [OrderController::class, 'store']);
-Route::put('/update-order/{id}', [OrderController::class, 'update']);
-Route::delete('/delete-order/{id}', [OrderController::class, 'destroy']);
+// orders
+Route::middleware('auth:sanctum')->get('/orders', [OrderController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/orders/{id}', [OrderController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/store-order', [OrderController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/update-order/{id}', [OrderController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/delete-order/{id}', [OrderController::class, 'destroy']);
+
 
 //carts
-Route::get('/carts', [CartController::class, 'index']);
-Route::get('/carts/{id}', [CartController::class, 'show']);
-Route::post('/store-cart', [CartController::class, 'store']);
-Route::put('/update-cart/{id}', [CartController::class, 'update']);
-Route::delete('/delete-cart/{id}', [CartController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/carts', [CartController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/carts/{id}', [CartController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/store-cart', [CartController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/update-cart/{id}', [CartController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/delete-cart/{id}', [CartController::class, 'destroy']);
+
 
 //products
 Route::get('/products', [ProductController::class, 'index']);

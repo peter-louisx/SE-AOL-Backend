@@ -12,7 +12,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         return response()->json(Order::with(['customer', 'product'])
-            ->where('customer_id', $user->id) 
+            ->where('customer_id', $user->customer->id) 
             ->get());
     }
 
@@ -20,7 +20,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $order = Order::with(['customer', 'product'])
-            ->where('customer_id', $user->id)
+            ->where('customer_id', $user->customer->id)
             ->find($id);
         
         if (!$order) {
@@ -34,17 +34,21 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'Pengguna belum login atau bukan customer'], 401);
+        }
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'order_status' => 'required|string|max:10',
             'total_pay' => 'required|integer',
             'destination' => 'required|string',
             'order_date' => 'required|date',
-            'delivery_type' => 'required|string|size:7',
+            'delivery_type' => 'required|string',
         ]);
 
         $order = Order::create([
-            'customer_id' => $user->id,
+            'customer_id' => $user->customer->id,
             'product_id' => $request->product_id,
             'order_status' => $request->order_status,
             'total_pay' => $request->total_pay,
@@ -62,7 +66,7 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $order = Order::where('customer_id', $user->id)->find($id);
+        $order = Order::where('customer_id', $user->customer->id)->find($id);
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
@@ -74,7 +78,7 @@ class OrderController extends Controller
             'total_pay' => 'sometimes|integer',
             'destination' => 'sometimes|string',
             'order_date' => 'sometimes|date',
-            'delivery_type' => 'sometimes|string|size:7',
+            'delivery_type' => 'sometimes|string',
         ]);
 
         $order->update($request->only([
@@ -91,7 +95,7 @@ class OrderController extends Controller
     public function destroy($id)
     {
         $user = Auth::user(); 
-        $order = Order::where('customer_id', $user->id)->find($id); 
+        $order = Order::where('customer_id', $user->customer->id)->find($id); 
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);

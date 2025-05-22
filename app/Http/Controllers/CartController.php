@@ -10,32 +10,52 @@ class CartController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
         return response()->json(Cart::with(['customer', 'product', 'order'])
-            ->where('customer_id', Auth::user()->id)
+            ->where('customer_id', $user->customer->id)
             ->get());
     }
 
     public function show($id)
     {
+        $user = Auth::user();
+        
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
         $cart = Cart::with(['customer', 'product', 'order'])
-            ->where('customer_id', Auth::user()->id)
+            ->where('customer_id', $user->customer->id)
             ->find($id);
 
         if (!$cart) {
             return response()->json(['message' => 'Cart not found'], 404);
         }
+        
         return response()->json($cart);
     }
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'order_id' => 'required|exists:orders,id',
             'quantity' => 'required|integer|min:1',
         ]);
+
         $cart = Cart::create([
-            'customer_id' => Auth::user()->id,
+            'customer_id' => $user->customer->id,
             'product_id' => $request->product_id,
             'order_id' => $request->order_id,
             'quantity' => $request->quantity,
@@ -49,7 +69,13 @@ class CartController extends Controller
 
     public function update(Request $request, $id)
     {
-        $cart = Cart::where('customer_id', Auth::user()->id)
+        $user = Auth::user();
+        
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
+        $cart = Cart::where('customer_id', $user->customer->id)
                     ->find($id);
 
         if (!$cart) {
@@ -74,7 +100,13 @@ class CartController extends Controller
 
     public function destroy($id)
     {
-        $cart = Cart::where('customer_id', Auth::user()->id)
+        $user = Auth::user();
+        
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
+        $cart = Cart::where('customer_id', $user->customer->id)
                     ->find($id);
 
         if (!$cart) {
