@@ -66,7 +66,7 @@ class CustomerController extends Controller
 
     public function getCustomerAddresses() {
         $user = auth()->user();
-        $addresses = CustomerAddress::where('customer_id', $user->id)
+        $addresses = CustomerAddress::where('customer_id', $user->customer->id)
             ->orderBy('id', 'asc')
             ->get();
         return response()->json($addresses);
