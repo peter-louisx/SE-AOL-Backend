@@ -20,6 +20,19 @@ class ProductController extends Controller
         }
         return response()->json($product);
     }
+    public function getReviewsByProductId($id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+        $reviews = $product->reviews;
+
+        return response()->json([
+            'product_id' => $id,
+            'reviews' => $reviews,
+        ]);
+    }
 
     public function store(Request $request)
     {

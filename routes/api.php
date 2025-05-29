@@ -92,6 +92,8 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::post('/store-product', [ProductController::class, 'store']);
 Route::put('/update-product/{id}', [ProductController::class, 'update']);
 Route::delete('/delete-product/{id}', [ProductController::class, 'destroy']);
+Route::get('/products/{id}/reviews', [ProductController::class, 'getReviewsByProductId']);
+
 
 
 //voucher

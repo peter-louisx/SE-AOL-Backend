@@ -16,7 +16,7 @@ class CartController extends Controller
             return response()->json(['error' => 'User not logged in or not a customer'], 401);
         }
 
-        return response()->json(Cart::with(['customer', 'product', 'order'])
+        return response()->json(Cart::with(['customer', 'product'])
             ->where('customer_id', $user->customer->id)
             ->get());
     }
@@ -29,7 +29,7 @@ class CartController extends Controller
             return response()->json(['error' => 'User not logged in or not a customer'], 401);
         }
 
-        $cart = Cart::with(['customer', 'product', 'order'])
+        $cart = Cart::with(['customer', 'product'])
             ->where('customer_id', $user->customer->id)
             ->find($id);
 
@@ -50,14 +50,12 @@ class CartController extends Controller
 
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'order_id' => 'required|exists:orders,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
         $cart = Cart::create([
             'customer_id' => $user->customer->id,
             'product_id' => $request->product_id,
-            'order_id' => $request->order_id,
             'quantity' => $request->quantity,
         ]);
 
@@ -84,12 +82,11 @@ class CartController extends Controller
 
         $request->validate([
             'product_id' => 'sometimes|exists:products,id',
-            'order_id' => 'sometimes|exists:orders,id',
             'quantity' => 'sometimes|integer|min:1',
         ]);
 
         $cart->update($request->only([
-            'product_id', 'order_id', 'quantity'
+            'product_id', 'quantity'
         ]));
 
         return response()->json([
