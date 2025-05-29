@@ -21,6 +21,17 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
+    public function showVendors($categoryId)
+    {
+        $category = Category::with('vendors')->find($categoryId);
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        return response()->json($category->vendors);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

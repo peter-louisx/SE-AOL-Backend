@@ -18,6 +18,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ProductTagController;
 use App\Http\Controllers\RecycleRequestController;
+use App\Http\Controllers\UpcycleRequestController;
 
 // User
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -62,6 +63,8 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::post('/store-category', [CategoryController::class, 'store']);
 Route::put('/update-category/{id}', [CategoryController::class, 'update']);
 Route::delete('/delete-category/{id}', [CategoryController::class, 'destroy']);
+Route::get('/categories/{id}/vendors', [CategoryController::class, 'showVendors']);
+
 
 //reviews
 Route::get('/reviews', [ReviewController::class, 'index']);
@@ -133,6 +136,14 @@ Route::middleware('auth:sanctum')->get('/recycle-requests/{id}', [RecycleRequest
 Route::middleware('auth:sanctum')->post('/store-recycle-request', [RecycleRequestController::class, 'store']);
 Route::middleware('auth:sanctum')->put('/update-recycle-request/{id}', [RecycleRequestController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/delete-recycle-request/{id}', [RecycleRequestController::class, 'destroy']);
+
+//upcycle request
+Route::middleware('auth:sanctum')->get('/upcycle-requests', [UpcycleRequestController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/upcycle-requests/{id}', [UpcycleRequestController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/store-upcycle-request', [UpcycleRequestController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/update-upcycle-request/{id}', [UpcycleRequestController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/delete-upcycle-request/{id}', [UpcycleRequestController::class, 'destroy']);
+
 
 
 

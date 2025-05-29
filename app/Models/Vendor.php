@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Category;
+use App\Models\RecycleRequest;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Vendor extends Model {
     use HasFactory;
@@ -18,4 +20,9 @@ class Vendor extends Model {
     public function recycleRequests() {
         return $this->hasMany(RecycleRequest::class, 'vendor_id');
     }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
 }

@@ -73,6 +73,7 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::post('/store-category', [CategoryController::class, 'store']);
 Route::put('/update-category/{id}', [CategoryController::class, 'update']);
 Route::delete('/delete-category/{id}', [CategoryController::class, 'destroy']);
+Route::get('/categories/{id}/vendors', [CategoryController::class, 'showVendors']);
 
 //reviews
 Route::get('/reviews', [ReviewController::class, 'index']);

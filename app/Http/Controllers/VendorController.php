@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vendor;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -73,4 +74,6 @@ class VendorController extends Controller
 
         return response()->json(['message' => 'Vendor deleted successfully!']);
     }
+
+
 }
