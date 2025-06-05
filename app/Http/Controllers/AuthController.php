@@ -23,15 +23,24 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
+        if ($user->customer()->exists()) {
+            $role = 'customer';
+        } elseif ($user->seller()->exists()) {
+            $role = 'seller';
+        } else {
+            $role = null;
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'token' => $token,
+            'role' => $role,
         ]);
     }
 
     public function logout(Request $request)
-    {   
+    {
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
