@@ -13,6 +13,8 @@ class Brand extends Model
         'name',
         'rating',
         'description',
+        'logo',
+        "cover"
     ];
 
     public function sellers()
