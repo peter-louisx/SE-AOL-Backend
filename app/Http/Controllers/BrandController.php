@@ -22,7 +22,7 @@ class BrandController extends Controller
 
     public function show($id)
     {
-        $brand = Brand::with(['sellers.user', 'products'])->find($id);
+        $brand = Brand::with(['products'])->find($id);
 
         if (!$brand) {
             return response()->json(['message' => 'Brand not found'], 404);
