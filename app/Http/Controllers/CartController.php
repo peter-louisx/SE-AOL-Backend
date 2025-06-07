@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Xendit\Invoice\InvoiceApi;
+use Xendit\Invoice\CreateInvoiceRequest;
 
 class CartController extends Controller
 {
@@ -131,5 +133,59 @@ class CartController extends Controller
         $cart->delete();
 
         return response()->json(['message' => 'Cart deleted successfully!']);
+    }
+
+    public function checkout(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
+        $cartItems = Cart::where('customer_id', $user->customer->id)->get();
+
+        if ($cartItems->isEmpty()) {
+            return response()->json(['message' => 'Cart is empty'], 400);
+        }
+
+        $amount = $cartItems->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
+
+
+        $params = [
+            'external_id' => 'cart-' . $user->customer->id . '-' . time(),
+            'description' => 'Checkout for customer ' . $user->customer->id,
+            'amount' => $amount,
+            'invoice_duration' => 172800,
+            'currency' => 'IDR',
+            'reminder_time' => 1,
+            'customer' => [
+                'given_names' => "Pelanggan " . $user->customer->id,
+                'email' => $user->email,
+            ],
+            'redirect_url' => env("APP_ENV") === 'production' ? "https://google.com" : "http://localhost:5173/checkout/success",
+            'success_redirect_url' => env("APP_ENV") === 'production' ? "https://google.com" : "http://localhost:5173/checkout/success",
+        ];
+
+        $invoiceApi = new InvoiceApi();
+        $createInvoiceRequest = new CreateInvoiceRequest($params);
+
+        try {
+            $invoice = $invoiceApi->createInvoice($createInvoiceRequest);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to create invoice: ' . $e->getMessage()], 500);
+        }
+
+        if (!$invoice) {
+            return response()->json(['error' => 'Failed to create invoice'], 500);
+        }
+
+        return response()->json([
+            'message' => 'Checkout successful!',
+            'invoice_url' => $invoice->getInvoiceUrl(),
+            'invoice_id' => $invoice->getId(),
+        ]);
     }
 }

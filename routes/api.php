@@ -145,7 +145,7 @@ Route::middleware('auth:sanctum')->put('/update-upcycle-request/{id}', [UpcycleR
 Route::middleware('auth:sanctum')->delete('/delete-upcycle-request/{id}', [UpcycleRequestController::class, 'destroy']);
 
 
-
+Route::post("/checkout", [CartController::class, 'checkout'])->middleware('auth:sanctum');
 
 //blog
 Route::get('/blogs', [BlogController::class, 'index']);

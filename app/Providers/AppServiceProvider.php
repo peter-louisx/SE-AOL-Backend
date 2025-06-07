@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Xendit\Configuration;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Set Xendit API key from environment variable
+        Configuration::setXenditKey(
+            env('XENDIT_SECRET_KEY', 'default_api_key')
+        );
     }
 }
