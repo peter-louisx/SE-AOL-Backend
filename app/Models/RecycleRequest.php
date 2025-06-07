@@ -9,13 +9,16 @@ class RecycleRequest extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
     protected $fillable = [
         'vendor_id',
         'customer_id',
-        'message_id',
         'req_status',
-        'delivery_type',
-        'total_pay',
+        'shipping_method',
+        'pickup_date',
+        'notes',
+        'total_pay'
     ];
 
     public function vendor()

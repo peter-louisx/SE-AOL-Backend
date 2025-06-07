@@ -134,9 +134,10 @@ Route::delete('/delete-message/{id}', [MessageController::class, 'destroy']);
 //recycle request
 Route::middleware('auth:sanctum')->get('/recycle-requests', [RecycleRequestController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/recycle-requests/{id}', [RecycleRequestController::class, 'show']);
-Route::middleware('auth:sanctum')->post('/store-recycle-request', [RecycleRequestController::class, 'store']);
-Route::middleware('auth:sanctum')->put('/update-recycle-request/{id}', [RecycleRequestController::class, 'update']);
+Route::middleware('auth:sanctum')->post('/send-recycle-request', [RecycleRequestController::class, 'sendCycleRequest']);
+Route::middleware('auth:sanctum')->put('/update-recycle-request/{id}', [RecycleRequestController::class, 'updateRecycleRequestStatus']);
 Route::middleware('auth:sanctum')->delete('/delete-recycle-request/{id}', [RecycleRequestController::class, 'destroy']);
+Route::middleware('auth:sanctum')->post("/recycle-requests/{id}/pay", [RecycleRequestController::class, 'pay']);
 
 //upcycle request
 Route::middleware('auth:sanctum')->get('/upcycle-requests', [UpcycleRequestController::class, 'index']);
