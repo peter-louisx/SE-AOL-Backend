@@ -136,6 +136,34 @@ class CartController extends Controller
         return response()->json(['message' => 'Cart deleted successfully!']);
     }
 
+    public function updateQuantity(Request $request, $id)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->customer) {
+            return response()->json(['error' => 'User not logged in or not a customer'], 401);
+        }
+
+        $cart = Cart::where('customer_id', $user->customer->id)
+            ->where('product_id', $id)
+            ->first();
+
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
+        }
+
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $cart->update(['quantity' => $request->quantity]);
+
+        return response()->json([
+            'message' => 'Cart quantity updated successfully!',
+            'cart' => $cart,
+        ]);
+    }
+
     public function checkout(Request $request)
     {
         $user = Auth::user();

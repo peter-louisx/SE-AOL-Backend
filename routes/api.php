@@ -87,6 +87,7 @@ Route::middleware('auth:sanctum')->get('/carts/{id}', [CartController::class, 's
 Route::middleware('auth:sanctum')->post('/store-cart', [CartController::class, 'store']);
 Route::middleware('auth:sanctum')->put('/update-cart/{id}', [CartController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/delete-cart/{id}', [CartController::class, 'destroy']);
+Route::middleware('auth:sanctum')->put("/update-cart-quantity/{id}", [CartController::class, 'updateQuantity']);
 
 
 //products
