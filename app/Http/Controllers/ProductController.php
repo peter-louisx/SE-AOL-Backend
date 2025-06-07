@@ -7,13 +7,30 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Product::with(['brand', 'category', 'tag'])->get());
+        $search = $request->query('search');
+
+        $category = $request->query('category');
+
+        $products = Product::with(['brand', 'category', 'tag']);
+
+        if ($search) {
+            $products = $products->where('name', 'ilike', '%' . $search . '%');
+        }
+
+        if ($category && is_array($category)) {
+            $products = $products->whereHas('category', function ($query) use ($category) {
+                $query->whereIn('name', $category);
+            });
+        }
+
+        return response()->json($products->get());
     }
 
     public function show($id)
     {
+
         $product = Product::with(['brand', 'category', 'tag'])->find($id);
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
@@ -86,7 +103,15 @@ class ProductController extends Controller
         ]);
 
         $product->update($request->only([
-            'name', 'price', 'sold', 'stock', 'description', 'rating', 'tag_id', 'category_id', 'brand_id'
+            'name',
+            'price',
+            'sold',
+            'stock',
+            'description',
+            'rating',
+            'tag_id',
+            'category_id',
+            'brand_id'
         ]));
 
         return response()->json([
