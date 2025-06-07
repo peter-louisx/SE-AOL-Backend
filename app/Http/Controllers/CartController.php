@@ -139,6 +139,7 @@ class CartController extends Controller
     {
         $user = Auth::user();
 
+
         if (!$user || !$user->customer) {
             return response()->json(['error' => 'User not logged in or not a customer'], 401);
         }
@@ -153,11 +154,21 @@ class CartController extends Controller
             return $item->product->price * $item->quantity;
         });
 
+        $deliveryOptions = [
+            'economy' => 3000,
+            'regular'   => 5000,
+            'instant' => 8000,
+        ];
+
+        $shippingFee = 1000;
+        $serviceFee = 2000;
+        $deliveryFee = $deliveryOptions[$request->input('delivery_option', 'economy')] ?? 3000;
+
 
         $params = [
             'external_id' => 'cart-' . $user->customer->id . '-' . time(),
             'description' => 'Checkout for customer ' . $user->customer->id,
-            'amount' => $amount,
+            'amount' => $amount + $shippingFee + $serviceFee + $deliveryFee,
             'invoice_duration' => 172800,
             'currency' => 'IDR',
             'reminder_time' => 1,
