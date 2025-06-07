@@ -124,7 +124,8 @@ class CartController extends Controller
         }
 
         $cart = Cart::where('customer_id', $user->customer->id)
-            ->find($id);
+            ->where('product_id', $id)
+            ->first();
 
         if (!$cart) {
             return response()->json(['message' => 'Cart not found'], 404);
